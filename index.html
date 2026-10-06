@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#F4EEE3">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Presenze">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icona-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icona-192.png">
+<title>Presenze · Castello di Galbino</title>
+<style>
+  :root {
+    --bg: #F4EEE3;
+    --card: #FFFCF6;
+    --ink: #2A231E;
+    --muted: #7A6E63;
+    --line: #E4D9C8;
+    --chip: #EDE4D3;
+    --green: #4F7A3A;
+    --terra: #B4532F;
+    --gold: #A9843A;
+    --blue: #3D5F7A;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body { font-family: var(--sans); display: flex; justify-content: center; -webkit-font-smoothing: antialiased; -webkit-text-size-adjust: 100%; }
+  [hidden] { display: none !important; }
+  .app { width: 100%; max-width: 440px; min-height: 100vh; min-height: 100dvh; padding: calc(18px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 18px; }
+
+  header { display: flex; align-items: center; gap: 12px; padding-top: 4px; }
+  header svg { width: 38px; height: 38px; color: var(--gold); flex: none; }
+  .brand { font-family: var(--serif); font-size: 21px; line-height: 1.1; }
+  .brand small { display: block; font-family: var(--sans); font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+  .hello { font-family: var(--serif); font-weight: 400; font-size: 34px; line-height: 1.15; margin-top: 10px; }
+  .today { font-size: 19px; color: var(--muted); margin-top: 6px; }
+  .today::first-letter { text-transform: uppercase; }
+  .clock { font-size: 68px; font-weight: 300; letter-spacing: -1px; font-variant-numeric: tabular-nums; line-height: 1; margin-top: 10px; }
+
+  .status { display: inline-flex; align-items: center; gap: 10px; font-size: 19px; padding: 11px 18px; border-radius: 999px; background: var(--card); border: 1px solid var(--line); align-self: flex-start; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: #C9BBA6; flex: none; }
+  .status.in .dot { background: var(--green); box-shadow: 0 0 0 4px rgba(79,122,58,.18); }
+  .status.done .dot { background: var(--terra); }
+
+  .avviso { background: #FBEFD9; border: 1px solid #EBCF9B; border-radius: 18px; padding: 14px 16px; font-size: 17px; line-height: 1.4; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 16px 18px; }
+  .card h2 { font-size: 13px; letter-spacing: 1.8px; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+  .row { display: flex; justify-content: space-between; gap: 12px; font-size: 19px; padding: 6px 0; }
+  .row span em { font-style: normal; color: var(--muted); font-size: 16px; }
+  .row b { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .row.total { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 12px; }
+  .row.sub { font-size: 17px; color: var(--muted); padding-top: 2px; }
+
+  .azioni { margin-top: auto; display: flex; flex-direction: column; gap: 14px; }
+  .big { width: 100%; border: 0; border-radius: 30px; padding: 32px 24px; font: inherit; font-size: 34px; font-weight: 600; color: #fff; display: flex; align-items: center; justify-content: center; gap: 14px; cursor: pointer; box-shadow: 0 12px 26px rgba(42,35,30,.18); transition: transform .08s ease, opacity .2s; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+  .big:active { transform: scale(.98); }
+  .big:disabled { opacity: .65; }
+  .big.entra { background: var(--green); }
+  .big.esci { background: var(--terra); }
+  .big.straord { background: var(--blue); }
+  .big svg { width: 36px; height: 36px; flex: none; }
+  .big .lab { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
+  .big .lab small { font-size: 16px; font-weight: 500; opacity: .85; margin-top: 4px; letter-spacing: .2px; }
+  .big.doppio { padding: 24px 24px; font-size: 30px; justify-content: flex-start; }
+  .domanda { font-size: 19px; color: var(--muted); text-align: center; }
+  .hint { text-align: center; font-size: 17px; color: var(--muted); margin-top: -6px; }
+  .fine { margin-top: auto; text-align: center; padding: 24px 18px; }
+  .fine-t { font-family: var(--serif); font-size: 30px; }
+  .fine-s { font-size: 19px; color: var(--muted); margin-top: 6px; }
+  .small { border: 1px solid var(--line); background: transparent; border-radius: 18px; padding: 15px; font: inherit; font-size: 18px; color: var(--ink); cursor: pointer; }
+  .foot { text-align: center; font-size: 15px; color: var(--muted); }
+
+  .ok { position: fixed; inset: 0; background: rgba(42,35,30,.5); display: none; align-items: flex-end; justify-content: center; padding: 14px 14px calc(14px + env(safe-area-inset-bottom)); }
+  .ok.show { display: flex; }
+  .sheet { width: 100%; max-width: 440px; background: var(--card); border-radius: 30px; padding: 30px 24px 22px; text-align: center; animation: up .25s ease-out; }
+  @keyframes up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .check { width: 88px; height: 88px; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: #fff; }
+  .check svg { width: 46px; height: 46px; }
+  .sheet h3 { font-family: var(--serif); font-weight: 400; font-size: 30px; margin-bottom: 8px; }
+  .sheet p { font-size: 22px; color: var(--muted); line-height: 1.35; }
+  .sheet button { margin-top: 24px; width: 100%; border: 0; border-radius: 20px; padding: 18px; font: inherit; font-size: 22px; background: var(--chip); color: var(--ink); cursor: pointer; }
+
+  .vuoto { margin: auto 0; text-align: center; }
+  .vuoto p { font-size: 20px; color: var(--muted); margin-top: 10px; line-height: 1.4; }
+</style>
+</head>
+<body>
+<main class="app" id="app">
+  <header>
+    <svg viewBox="0 0 48 48" aria-hidden="true">
+      <path fill="currentColor" d="M9 44V17h5v-6h5v6h3.5v-6h5v6H31v-6h5v6h3v27H9z"/>
+      <path fill="#F4EEE3" d="M20.5 44v-7.5a3.5 3.5 0 0 1 7 0V44z"/>
+      <rect fill="#F4EEE3" x="22.5" y="22" width="3" height="6" rx="1.5"/>
+    </svg>
+    <div class="brand">Castello di Galbino<small id="sottotitolo">Presenze</small></div>
+  </header>
+
+  <div class="vuoto" id="senzaLink" hidden>
+    <h1 class="hello" id="senzaLinkT">Link non valido</h1>
+    <p id="senzaLinkS">Apri l'app dal link che ti ha mandato Stefano.</p>
+  </div>
+
+  <section id="testa" hidden>
+    <h1 class="hello" id="hello"></h1>
+    <p class="today" id="today"></p>
+    <p class="clock" id="clock" aria-live="off">--:--</p>
+  </section>
+
+  <div class="status" id="status" hidden><span class="dot"></span><span id="statusText"></span></div>
+
+  <div class="avviso" id="avviso" hidden></div>
+
+  <div class="card" id="oggi" hidden>
+    <h2 id="oggiT"></h2>
+    <div id="righe"></div>
+  </div>
+
+  <div class="azioni" id="azioni" hidden>
+    <p class="domanda" id="domanda" hidden></p>
+    <button type="button" class="big entra" id="big">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" id="bigIcon"></svg>
+      <span class="lab"><span id="bigText"></span><small id="bigSub" hidden></small></span>
+    </button>
+    <button type="button" class="big straord doppio" id="big2" hidden>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" id="big2Icon"></svg>
+      <span class="lab"><span id="big2Text"></span><small id="big2Sub"></small></span>
+    </button>
+    <p class="hint" id="hint"></p>
+  </div>
+
+  <div class="card fine" id="fine" hidden>
+    <p class="fine-t" id="fineT"></p>
+    <p class="fine-s" id="fineS"></p>
+  </div>
+  <button type="button" class="small" id="rientra" hidden></button>
+  <p class="foot" id="foot" hidden></p>
+</main>
+
+<div class="ok" id="ok" role="dialog" aria-modal="true" aria-labelledby="okTitle">
+  <div class="sheet">
+    <div class="check" id="okCheck"></div>
+    <h3 id="okTitle"></h3>
+    <p id="okText"></p>
+    <button type="button" id="okClose"></button>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  // Le timbrature arrivano a un'automazione di Airtable (base Galbino): Nerella e Jessica
+  // nella tabella Presenze, Wayne e Gent nella tabella Ore giardinieri.
+  // L'automazione accetta solo la chiave personale contenuta nel link di ciascuno.
+  var WEBHOOK = 'https://hooks.airtable.com/workflows/v1/genericWebhook/appNTxsjs57VRwI2v/wfloBHJSWhXrPQ2gA/wtr5mCAUqP51nGu6b';
+  var PERSONE = {
+    nerella: { nome: 'Nerella', lingua: 'it', manutenzione: false },
+    jessica: { nome: 'Jessica', lingua: 'it', manutenzione: false },
+    wayne:   { nome: 'Wayne',   lingua: 'en', manutenzione: true },
+    gent:    { nome: 'Gent',    lingua: 'it', manutenzione: true }
+  };
+
+  var TESTI = {
+    it: {
+      locale: 'it-IT', sottotitolo: 'Presenze', sottotitoloM: 'Ore di lavoro',
+      saluti: ['Buongiorno', 'Buon pomeriggio', 'Buonasera'],
+      nonIniziato: 'Non hai ancora iniziato', alLavoro: 'Al lavoro dalle ', oggiHai: 'Oggi hai lavorato ',
+      entrata: 'Entrata', uscita: 'Uscita', unAttimo: 'Un attimo…',
+      hintEntra: 'Tocca quando arrivi al castello', hintEsci: 'Tocca quando vai via',
+      domanda: 'Che lavoro inizi?', ordinaria: 'Ordinaria', straordinaria: 'Straordinaria',
+      sottoOrd: 'manutenzione ordinaria', sottoStr: 'manutenzione straordinaria', inizio: 'Inizia',
+      oggi: 'Oggi', totale: 'Totale',
+      fineT: 'Giornata finita', fineS: 'Grazie, a presto!', rientra: 'Devi rientrare? Tocca qui',
+      foot: 'Hai sbagliato? Scrivi a Stefano.',
+      registrata: function (t) { return t + ' registrata'; }, alle: 'alle ', oggiDur: 'oggi ',
+      nonReg: 'Non registrata', nonRegTesto: function (t) { return 'Manca la connessione. Controlla internet e tocca di nuovo ' + t + '.'; },
+      chiudi: 'Chiudi', hoCapito: 'Ho capito',
+      dimenticata: function (g, m) { return 'Il ' + g + '/' + m + ' non hai segnato l’uscita. Scrivi a Stefano a che ora hai finito.'; },
+      linkT: 'Link non valido', linkS: 'Apri l’app dal link che ti ha mandato Stefano.',
+      min: function (m) { return m + (m === 1 ? ' minuto' : ' minuti'); },
+      ore: function (h) { return h === 1 ? '1 ora' : h + ' ore'; }, e: ' e '
+    },
+    en: {
+      locale: 'en-GB', sottotitolo: 'Timesheet', sottotitoloM: 'Timesheet',
+      saluti: ['Good morning', 'Good afternoon', 'Good evening'],
+      nonIniziato: 'Not started yet', alLavoro: 'Working since ', oggiHai: 'Today you worked ',
+      entrata: 'Start', uscita: 'Finish', unAttimo: 'One moment…',
+      hintEntra: 'Tap when you start', hintEsci: 'Tap when you finish',
+      domanda: 'What are you starting?', ordinaria: 'Routine', straordinaria: 'Extra work',
+      sottoOrd: 'manutenzione ordinaria', sottoStr: 'manutenzione straordinaria', inizio: 'Start',
+      oggi: 'Today', totale: 'Total',
+      fineT: 'Day finished', fineS: 'Thanks, see you soon!', rientra: 'Back to work? Tap here',
+      foot: 'Made a mistake? Message Stefano.',
+      registrata: function (t) { return t + ' recorded'; }, alle: 'at ', oggiDur: 'today ',
+      nonReg: 'Not recorded', nonRegTesto: function (t) { return 'No connection. Check the internet and tap ' + t + ' again.'; },
+      chiudi: 'Close', hoCapito: 'OK',
+      dimenticata: function (g, m) { return 'On ' + g + '/' + m + ' you didn’t record when you finished. Tell Stefano what time you left.'; },
+      linkT: 'Invalid link', linkS: 'Open the app from the link Stefano sent you.',
+      min: function (m) { return m + (m === 1 ? ' minute' : ' minutes'); },
+      ore: function (h) { return h === 1 ? '1 hour' : h + ' hours'; }, e: ' and '
+    }
+  };
+
+  var ICON_IN = '<path d="M10 17l5-5-5-5"/><path d="M15 12H3"/><path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"/>';
+  var ICON_OUT = '<path d="M14 17l5-5-5-5"/><path d="M19 12H7"/><path d="M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h5"/>';
+  var ICON_OK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+  var ICON_KO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 7v6"/><path d="M12 17.5v.5"/></svg>';
+
+  function $(id) { return document.getElementById(id); }
+
+  // --- memoria sul telefono (solo per mostrare la giornata; quello che conta è su Airtable) ---
+  function leggi(chiave, predefinito) {
+    try { var v = localStorage.getItem(chiave); return v ? JSON.parse(v) : predefinito; } catch (e) { return predefinito; }
+  }
+  function scrivi(chiave, valore) {
+    try { localStorage.setItem(chiave, JSON.stringify(valore)); } catch (e) { /* niente: la timbratura è comunque su Airtable */ }
+  }
+
+  // --- chi è: dal link, oppure dall'ultima volta ---
+  var q = new URLSearchParams(location.search);
+  var chi = (q.get('chi') || '').toLowerCase();
+  var k = q.get('k') || '';
+  if (PERSONE[chi] && k) {
+    scrivi('presenze:utente', { chi: chi, k: k });
+  } else {
+    var salvato = leggi('presenze:utente', null);
+    if (salvato && PERSONE[salvato.chi] && salvato.k) { chi = salvato.chi; k = salvato.k; }
+  }
+  if (!PERSONE[chi] || !k) {
+    var lingua = (navigator.language || 'it').slice(0, 2) === 'it' ? 'it' : 'en';
+    $('senzaLinkT').textContent = TESTI[lingua].linkT;
+    $('senzaLinkS').textContent = TESTI[lingua].linkS;
+    $('senzaLink').hidden = false;
+    return;
+  }
+  var P = PERSONE[chi];
+  var T = TESTI[P.lingua];
+  document.documentElement.lang = P.lingua;
+  $('sottotitolo').textContent = P.manutenzione ? T.sottotitoloM : T.sottotitolo;
+  $('foot').textContent = T.foot;
+  $('fineT').textContent = T.fineT;
+  $('fineS').textContent = T.fineS;
+  $('rientra').textContent = T.rientra;
+  $('oggiT').textContent = T.oggi;
+  ['testa', 'status', 'azioni', 'foot'].forEach(function (id) { $(id).hidden = false; });
+
+  // --- utilità di data e ora ---
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function hhmm(d) { return pad(d.getHours()) + ':' + pad(d.getMinutes()); }
+  function giorno(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+  function minuti(a, b) { return Math.max(0, Math.round((b - a) / 60000)); }
+  function durata(min) {
+    var h = Math.floor(min / 60), m = min % 60;
+    if (h === 0) return T.min(m);
+    return m ? T.ore(h) + T.e + T.min(m) : T.ore(h);
+  }
+  function saluto() {
+    var h = new Date().getHours();
+    return T.saluti[h < 13 ? 0 : (h < 18 ? 1 : 2)];
+  }
+  function nomeCat(c) { return c === 'Straordinaria' ? T.straordinaria : T.ordinaria; }
+
+  var CHIAVE_GIORNO = 'presenze:' + chi + ':giornate';
+  function giornate() { return leggi(CHIAVE_GIORNO, {}); }
+  function turniDi(d) {
+    var g = giornate()[d] || [];
+    return g.map(function (t) { return { entrata: new Date(t.entrata), uscita: t.uscita ? new Date(t.uscita) : null, cat: t.cat || null }; });
+  }
+  function salvaTurni(d, turni) {
+    var tutte = giornate();
+    tutte[d] = turni.map(function (t) { return { entrata: t.entrata.toISOString(), uscita: t.uscita ? t.uscita.toISOString() : null, cat: t.cat || null }; });
+    Object.keys(tutte).sort().slice(0, -40).forEach(function (x) { delete tutte[x]; });
+    scrivi(CHIAVE_GIORNO, tutte);
+  }
+  // un'entrata rimasta aperta in un giorno passato = uscita dimenticata
+  function uscitaDimenticata() {
+    var oggi = giorno(new Date());
+    var tutte = giornate();
+    var giorni = Object.keys(tutte).filter(function (d) { return d < oggi; }).sort();
+    for (var i = giorni.length - 1; i >= 0; i--) {
+      var t = tutte[giorni[i]];
+      if (t.length && !t[t.length - 1].uscita && !t[t.length - 1].avvisato) return giorni[i];
+    }
+    return null;
+  }
+  function segnaAvvisato(d) {
+    var tutte = giornate();
+    if (tutte[d] && tutte[d].length) { tutte[d][tutte[d].length - 1].avvisato = true; scrivi(CHIAVE_GIORNO, tutte); }
+  }
+
+  // --- disegno ---
+  function tick() {
+    var now = new Date();
+    $('clock').textContent = hhmm(now);
+    $('today').textContent = now.toLocaleDateString(T.locale, { weekday: 'long', day: 'numeric', month: 'long' });
+    $('hello').textContent = saluto() + ', ' + P.nome;
+  }
+
+  var invio = false;
+  var ultimoGiorno = giorno(new Date());
+  function render() {
+    tick();
+    var oggi = giorno(new Date());
+    var g = turniDi(oggi);
+    var aperta = g.length && !g[g.length - 1].uscita ? g[g.length - 1] : null;
+    var finita = g.length > 0 && !aperta;
+
+    var dimenticata = uscitaDimenticata();
+    if (dimenticata) {
+      var p = dimenticata.split('-');
+      $('avviso').textContent = T.dimenticata(Number(p[2]), Number(p[1]));
+      $('avviso').hidden = false;
+    } else {
+      $('avviso').hidden = true;
+    }
+
+    var st = $('status');
+    st.classList.remove('in', 'done');
+    if (aperta) {
+      st.classList.add('in');
+      $('statusText').textContent = T.alLavoro + hhmm(aperta.entrata);
+    } else if (g.length) {
+      st.classList.add('done');
+      var tot = g.reduce(function (s, x) { return s + minuti(x.entrata, x.uscita); }, 0);
+      $('statusText').textContent = T.oggiHai + durata(tot);
+    } else {
+      $('statusText').textContent = T.nonIniziato;
+    }
+
+    // pulsanti
+    var big = $('big'), big2 = $('big2');
+    var scelta = P.manutenzione && !aperta;   // giardinieri: all'inizio si sceglie il tipo
+    if (!invio) {
+      if (aperta) {
+        big.className = 'big esci';
+        $('bigText').textContent = T.uscita;
+        $('bigSub').hidden = !(P.manutenzione && aperta.cat);
+        $('bigSub').textContent = P.manutenzione && aperta.cat ? (aperta.cat === 'Straordinaria' ? T.sottoStr : T.sottoOrd) : '';
+        $('bigIcon').innerHTML = ICON_OUT;
+      } else if (scelta) {
+        big.className = 'big entra doppio';
+        $('bigText').textContent = T.ordinaria;
+        $('bigSub').textContent = T.sottoOrd;
+        $('bigSub').hidden = false;
+        $('bigIcon').innerHTML = ICON_IN;
+        $('big2Text').textContent = T.straordinaria;
+        $('big2Sub').textContent = T.sottoStr;
+        $('big2Icon').innerHTML = ICON_IN;
+      } else {
+        big.className = 'big entra';
+        $('bigText').textContent = T.entrata;
+        $('bigSub').hidden = true;
+        $('bigIcon').innerHTML = ICON_IN;
+      }
+    }
+    big2.hidden = !scelta;
+    $('domanda').hidden = !scelta;
+    $('domanda').textContent = T.domanda;
+    $('hint').hidden = scelta;
+    $('hint').textContent = aperta ? T.hintEsci : T.hintEntra;
+    $('azioni').hidden = finita;
+    $('fine').hidden = !finita;
+    $('rientra').hidden = !finita;
+
+    // riepilogo di oggi
+    $('oggi').hidden = !g.length;
+    var righe = [];
+    g.forEach(function (x) {
+      var etichetta = P.manutenzione && x.cat ? ' <em>· ' + nomeCat(x.cat).toLowerCase() + '</em>' : '';
+      righe.push('<div class="row"><span>' + T.entrata + etichetta + '</span><b>' + hhmm(x.entrata) + '</b></div>');
+      if (x.uscita) righe.push('<div class="row"><span>' + T.uscita + '</span><b>' + hhmm(x.uscita) + '</b></div>');
+    });
+    var chiuse = g.filter(function (x) { return x.uscita; });
+    if (chiuse.length) {
+      var t2 = chiuse.reduce(function (s, x) { return s + minuti(x.entrata, x.uscita); }, 0);
+      righe.push('<div class="row total"><span>' + T.totale + '</span><b>' + durata(t2) + '</b></div>');
+      if (P.manutenzione) {
+        var perCat = { Ordinaria: 0, Straordinaria: 0 };
+        chiuse.forEach(function (x) { perCat[x.cat === 'Straordinaria' ? 'Straordinaria' : 'Ordinaria'] += minuti(x.entrata, x.uscita); });
+        if (perCat.Ordinaria && perCat.Straordinaria) {
+          righe.push('<div class="row sub"><span>' + T.ordinaria + '</span><b>' + durata(perCat.Ordinaria) + '</b></div>');
+          righe.push('<div class="row sub"><span>' + T.straordinaria + '</span><b>' + durata(perCat.Straordinaria) + '</b></div>');
+        }
+      }
+    }
+    $('righe').innerHTML = righe.join('');
+  }
+
+  // --- conferme ---
+  var chiudiTimer = null;
+  function foglio(colore, icona, titolo, testo, bottone, autoChiudi) {
+    $('okCheck').style.background = colore;
+    $('okCheck').innerHTML = icona;
+    $('okTitle').textContent = titolo;
+    $('okText').textContent = testo;
+    $('okClose').textContent = bottone;
+    $('ok').classList.add('show');
+    clearTimeout(chiudiTimer);
+    if (autoChiudi) chiudiTimer = setTimeout(function () { $('ok').classList.remove('show'); }, 6000);
+  }
+  $('okClose').addEventListener('click', function () { $('ok').classList.remove('show'); });
+
+  // --- invio della timbratura ---
+  function timbra(catScelta, bottone, etichetta) {
+    if (invio) return;
+    var now = new Date();
+    var oggi = giorno(now);
+    var g = turniDi(oggi);
+    var aperta = g.length && !g[g.length - 1].uscita ? g[g.length - 1] : null;
+    var tipo = aperta ? 'Uscita' : 'Entrata';
+    var cat = P.manutenzione ? (aperta ? (aperta.cat || 'Ordinaria') : (catScelta || 'Ordinaria')) : null;
+
+    var dimenticata = uscitaDimenticata();
+    if (dimenticata) segnaAvvisato(dimenticata);
+
+    invio = true;
+    $('big').disabled = true;
+    $('big2').disabled = true;
+    etichetta.textContent = T.unAttimo;
+    if (navigator.vibrate) navigator.vibrate(30);
+
+    var dati = { chi: chi, k: k, tipo: tipo, ora: hhmm(now) };
+    if (cat) dati.cat = cat;
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timer = setTimeout(function () { if (ctrl) ctrl.abort(); }, 15000);
+    var nomeTipo = tipo === 'Entrata' ? T.entrata : T.uscita;
+
+    fetch(WEBHOOK, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(dati).toString(),
+      signal: ctrl ? ctrl.signal : undefined,
+      keepalive: true
+    }).then(function () {
+      clearTimeout(timer);
+      if (aperta) { aperta.uscita = now; } else { g.push({ entrata: now, uscita: null, cat: cat }); }
+      salvaTurni(oggi, g);
+      invio = false;
+      $('big').disabled = false;
+      $('big2').disabled = false;
+      render();
+      var dettaglio = T.alle + hhmm(now);
+      if (tipo === 'Entrata') {
+        if (cat) dettaglio += ' · ' + nomeCat(cat).toLowerCase();
+        foglio(cat === 'Straordinaria' ? 'var(--blue)' : 'var(--green)', ICON_OK, T.registrata(nomeTipo), dettaglio, T.chiudi, true);
+      } else {
+        foglio('var(--terra)', ICON_OK, T.registrata(nomeTipo), dettaglio + ' · ' + T.oggiDur + durata(minuti(aperta.entrata, now)), T.chiudi, true);
+      }
+    }).catch(function () {
+      clearTimeout(timer);
+      invio = false;
+      $('big').disabled = false;
+      $('big2').disabled = false;
+      render();
+      foglio('#8C7B6B', ICON_KO, T.nonReg, T.nonRegTesto(nomeTipo), T.hoCapito, false);
+    });
+  }
+  $('big').addEventListener('click', function () { timbra('Ordinaria', $('big'), $('bigText')); });
+  $('big2').addEventListener('click', function () { timbra('Straordinaria', $('big2'), $('big2Text')); });
+  $('rientra').addEventListener('click', function () {
+    // nuovo turno: si torna alla scelta iniziale
+    $('fine').hidden = true; $('rientra').hidden = true; $('azioni').hidden = false;
+    if (!P.manutenzione) timbra(null, $('big'), $('bigText'));
+    else mostraScelta();
+  });
+  function mostraScelta() {
+    // mostra di nuovo i due pulsanti di inizio senza registrare niente
+    $('big').className = 'big entra doppio';
+    $('bigText').textContent = T.ordinaria; $('bigSub').textContent = T.sottoOrd; $('bigSub').hidden = false;
+    $('bigIcon').innerHTML = ICON_IN;
+    $('big2Text').textContent = T.straordinaria; $('big2Sub').textContent = T.sottoStr; $('big2Icon').innerHTML = ICON_IN;
+    $('big2').hidden = false; $('domanda').hidden = false; $('domanda').textContent = T.domanda; $('hint').hidden = true;
+  }
+
+  render();
+  setInterval(function () {
+    var d = giorno(new Date());
+    if (d !== ultimoGiorno) { ultimoGiorno = d; render(); } else { tick(); }
+  }, 1000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+})();
+</script>
+</body>
+</html>
