@@ -168,14 +168,15 @@
   'use strict';
 
   // Le timbrature arrivano a un'automazione di Airtable (base Galbino): Nerella e Jessica
-  // nella tabella Presenze, Wayne e Gent nella tabella Ore giardinieri.
+  // nella tabella Presenze, Wayne, Gent e Davide nella tabella Ore giardinieri.
   // L'automazione accetta solo la chiave personale contenuta nel link di ciascuno.
   var WEBHOOK = 'https://hooks.airtable.com/workflows/v1/genericWebhook/appNTxsjs57VRwI2v/wfloBHJSWhXrPQ2gA/wtr5mCAUqP51nGu6b';
   var PERSONE = {
     nerella: { nome: 'Nerella', lingua: 'it', manutenzione: false },
     jessica: { nome: 'Jessica', lingua: 'it', manutenzione: false },
     wayne:   { nome: 'Wayne',   lingua: 'en', manutenzione: true, sfondo: 'sfondo-wayne.bin', viso: [0.66, 0.43] },
-    gent:    { nome: 'Gent',    lingua: 'it', manutenzione: true }
+    gent:    { nome: 'Gent',    lingua: 'it', manutenzione: true },
+    davide:  { nome: 'Davide',  lingua: 'it', manutenzione: true }
   };
 
   var TESTI = {
